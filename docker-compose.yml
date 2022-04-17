@@ -1,0 +1,29 @@
+version: '3'
+services:
+  redmine_db:
+    image: mysql
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    ports:
+      - 3306:3306
+    command: 
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
+  redmine:
+    build: .
+    command: bundle exec rdebug-ide --host 0.0.0.0 --port 1234 --dispatcher-port 26162 -- bin/rails server -b 0.0.0.0
+    volumes:
+      - ./src:/redmine
+    ports:
+      - "1234:1234"
+      - "3000:3000"
+      - "26162:26162"
+    stdin_open: true
+    tty: true
+    restart: always
+    depends_on:
+      - redmine_db

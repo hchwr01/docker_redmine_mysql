@@ -1,0 +1,19 @@
+default: &default
+  adapter: mysql2
+  host: redmine_db
+  port: 3306
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: password
+
+development:
+  <<: *default
+  database: redmine_development
+
+test:
+  <<: *default
+  database: redmine_test
+
+production:
+  <<: *default
+  database: redmine
